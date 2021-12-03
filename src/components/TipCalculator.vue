@@ -1,26 +1,26 @@
 <template>
-  <div class="rounded-md bg-white flex justify-center items-center w-3/4 p-4">
+  <div class="rounded-2xl shadow-lg bg-white flex justify-center items-center w-3/4 p-4">
     <!-- LEFT PART -->
     <div class="flex flex-col p-4 w-1/2 h-80" id="leftCalculator">
       <!-- Bill -->
       <h1 class="font-bold">Bill</h1>
       <div class="bill mt-3">
-        <input type="text" placeholder="0" v-model="bill" class="text-right rounded-md p-1 w-full">
+        <input type="number" step="0.01" placeholder="0" v-model="bill" class="text-right rounded-md p-1 w-full">
       </div>
       <!-- Select Tip -->
       <h1 class="font-bold my-3">Select Tip %</h1>
       <div class="grid grid-cols-3 gap-4 mb-3">
-        <div v-for="(tip, index) in tipPercentage" :key="index" class="tipBtn py-1 flex justify-center rounded-md cursor-pointer" @click="tips(tip)">
-          <span class="text-white font-bold pointer-events-none">{{tip}}%</span>
+        <div v-for="(item, index) in tipPercentage" :key="index" class="tipBtn py-1 flex justify-center rounded-md cursor-pointer" @click="tips(item)" :class="item === tip ? 'active' : ''">
+          <span class="text-white font-bold pointer-events-none">{{item}}%</span>
         </div>
         <div>
-          <input type="text" class="font-bold customBtn py-1 text-center rounded-md" @keypress.enter="tips(tip)" placeholder="Custom">
+          <input type="number" class="font-bold customBtn py-1 text-center rounded-md" @keypress.enter="(event) => tips(event.target.value)" placeholder="Custom">
         </div>
       </div>
       <!-- Number of People -->
       <h1 class="font-bold">Number of People</h1>
       <div class="people mt-3">
-        <input type="text" placeholder="0" v-model="people" class="text-right rounded-md p-1 w-full">
+        <input type="number" placeholder="0" v-model="people" class="text-right rounded-md p-1 w-full">
       </div>
     </div>
 
@@ -68,14 +68,14 @@ export default {
     },
     totalCalculator() {
       if (this.tip && this.bill && this.people) {
-      this.totalAmount = (parseInt(this.bill) + parseInt((this.bill/100) * this.tip)) / parseInt(this.people);
+      this.totalAmount = ((parseInt(this.bill) + parseInt((this.bill/100) * this.tip)) / parseInt(this.people)).toFixed(2);
       } else if (this.bill) {
         this.totalAmount = this.bill;
       }
     },
     tipPerPerson() {
       if (this.tip && this.bill && this.people) {
-        this.tipAmountPerPerson = parseInt((this.bill/100) * this.tip) / parseInt(this.people);
+        this.tipAmountPerPerson = (parseInt((this.bill/100) * this.tip) / parseInt(this.people)).toFixed(2);
       }
     },
     reset(){
@@ -124,6 +124,14 @@ export default {
 
 .tipBtn {
   background-color: hsl(183, 100%, 15%)
+}
+
+.tipBtn.active {
+  background-color:  hsl(172, 67%, 45%);
+}
+
+.tipBtn.active span {
+  color: hsl(183, 100%, 15%);  
 }
 
 .customBtn {
